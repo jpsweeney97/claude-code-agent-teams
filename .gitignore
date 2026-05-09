@@ -3,6 +3,7 @@
 *.swp
 .idea/
 .vscode/
+.claude/*.local.json
 
 # Defensive against post-publish drift — these patterns are excluded by the
 # initial copy allowlist, but if skills are ever edited directly in this repo
