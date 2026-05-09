@@ -12,7 +12,10 @@ evals/
 iteration-*/
 *.local.md
 
-# Working artifacts (design specs, implementation plans, session notes).
-# Public marketplace consumers don't need these; they belong in the working
-# tree as scratch space, not in canonical history.
-docs/
+# Working artifacts: handoffs, design specs, implementation plans, learnings.
+# These specific subdirs hold maintainer scratch space and should not enter
+# canonical history. User-facing docs/ subdirs (e.g., docs/api/) are NOT
+# ignored — narrow patterns let future contributors add public documentation.
+docs/handoffs/
+docs/superpowers/
+docs/learnings/
