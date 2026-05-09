@@ -1,0 +1,15 @@
+{
+  "name": "jpsweeney97-agent-teams",
+  "description": "JP Sweeney's agent-team-powered Claude Code skills",
+  "owner": {
+    "name": "JP Sweeney",
+    "url": "https://github.com/jpsweeney97"
+  },
+  "plugins": [
+    {
+      "name": "claude-code-agent-teams",
+      "source": "./",
+      "description": "Agent-team-powered skills for grounded documentation and deep architecture review."
+    }
+  ]
+}

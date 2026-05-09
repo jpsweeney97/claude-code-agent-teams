@@ -1,0 +1,18 @@
+# OS / editor noise
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Defensive against post-publish drift — these patterns are excluded by the
+# initial copy allowlist, but if skills are ever edited directly in this repo
+# per the maintenance flow, eval/workspace dirs would otherwise accumulate.
+evals/
+*-workspace/
+iteration-*/
+*.local.md
+
+# Working artifacts (design specs, implementation plans, session notes).
+# Public marketplace consumers don't need these; they belong in the working
+# tree as scratch space, not in canonical history.
+docs/
