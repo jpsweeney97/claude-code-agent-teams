@@ -39,7 +39,6 @@ Review system architecture using a parallel team of 6 specialized reviewers. Eac
 ## When NOT to Use
 
 - Code-level bug review → use a code review skill
-- Multi-file specifications with frontmatter metadata → use `spec-review-team`
 
 ## Prerequisites
 
