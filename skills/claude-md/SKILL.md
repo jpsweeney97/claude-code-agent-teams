@@ -1,6 +1,22 @@
 ---
 name: claude-md
 description: Create, audit, and update CLAUDE.md files with codebase-grounded accuracy. Orchestrates an agent team to explore the project from five perspectives — toolchain, architecture, conventions, gotchas, and existing documentation — then produces CLAUDE.md content verified against reality. Trigger on "create a CLAUDE.md", "write a CLAUDE.md", "audit CLAUDE.md", "check CLAUDE.md", "improve CLAUDE.md", "update CLAUDE.md", "this project needs a CLAUDE.md", "write project instructions for Claude", "set up Claude for this project" (when about project instruction files, not hooks/MCP/settings), or any request about CLAUDE.md quality, accuracy, or completeness. Distinct from README (introducing the project), handbook (operating the system), and CHANGELOG.md (tracking changes).
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - Bash
+  - Agent
+  - ToolSearch
+  - TeamCreate
+  - TeamDelete
+  - SendMessage
+  - TaskCreate
+  - TaskUpdate
+  - TaskList
+  - TaskGet
 ---
 
 # CLAUDE.md
@@ -8,6 +24,8 @@ description: Create, audit, and update CLAUDE.md files with codebase-grounded ac
 Create, audit, or update CLAUDE.md files — the project instruction files that tell Claude how to work effectively in a codebase. CLAUDE.md is to Claude what onboarding docs are to a new team member: the fastest path from "I've never seen this repo" to "I know how things work here."
 
 Unlike README (introducing the project to humans) or handbook (operating the system), CLAUDE.md captures operational knowledge that prevents wasted context: which commands to run, where things live, what conventions to follow, and what will silently break if you don't know about it.
+
+**Announce at start:** "I'm using the claude-md skill to [create/audit/update] this CLAUDE.md."
 
 ## Prerequisite
 
@@ -390,6 +408,17 @@ When working on a nested CLAUDE.md (a package within a monorepo, a module within
 2. **Select sections** for the nested project's type — a plugin within a monorepo gets plugin-appropriate sections, not monorepo-level sections
 3. **Reference the root CLAUDE.md** for shared context: "See the [root CLAUDE.md](../../.claude/CLAUDE.md) for workspace-level setup and cross-cutting conventions"
 4. **Don't duplicate** — shared commands, environment setup, or conventions that belong in the root CLAUDE.md shouldn't be repeated in nested files
+
+## Failure Modes
+
+| Failure | Detection | Response |
+|---------|-----------|----------|
+| Agent teams not enabled | Prerequisite check | Hard stop — do not fall back to a shallow approach |
+| TeamCreate fails | Step 2 setup | Hard stop — cannot proceed without team |
+| Teammate spawn fails | Step 2 spawn | Log, continue with remaining. All fail = hard stop |
+| Teammate timeout | No idle notifications for 5 min | Proceed with available findings; check workspace files as secondary completion signal |
+| Missing output file | Step 3 reconciliation | Log as coverage gap; do not fabricate content to fill |
+| TeamDelete fails | Cleanup step | Orphaned teammates still active — report degraded state, proceed with workspace cleanup |
 
 ## Cleanup
 
