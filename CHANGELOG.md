@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **New skill: `tech-debt-audit`** — 6-auditor parallel team (Code Health, Architecture Drift, Dependency & Supply Chain, Test Debt, Operational & Observability, Knowledge & Documentation) producing a prioritized cleanup backlog with severity × leverage × effort scoring, bucketed into quick-wins / high-leverage / strategic / watch.
+
+### Changed
+
+- `tech-debt-audit` lifecycle hardening: explicit Phase 3 preflight for stale workspace and existing-team detection; mandatory durable report at `docs/audits/YYYY-MM-DD-<target-slug>-debt.md` before any workspace deletion; workspace-preservation invariant overrides cleanup defaults when the durable report is missing or `TeamDelete` reports degraded state; task IDs and `TaskUpdate` obligations now wired into auditor spawn prompts so `TaskGet` is a meaningful completion signal.
+- `tech-debt-audit` severity rubric tightened: P0 for `bus-factor-1 + undocumented` now requires concrete handoff evidence (announced transition, named successor, near-term deadline, or active blocker) rather than the prior "even if everything else looks fine" wording.
+- README and plugin-facing docs now list 6 skills (was 5).
+
 ## [0.1.0] - 2026-05-08
 
 ### Added

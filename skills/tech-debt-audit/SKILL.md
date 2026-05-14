@@ -125,12 +125,20 @@ Apply the staffing rules from [`references/staffing-rules.md`](references/staffi
 
 ### Phase 3: Audit
 
+#### Preflight
+
+Before any spawn or write:
+
+1. **Workspace check** — if `.tech-debt-audit-workspace/` already exists, present options: archive (rename with timestamp suffix), remove, or abort. Do not silently overwrite.
+2. **Team check** — verify no existing team named `tech-debt-audit` is active in this session (one-team-per-session constraint). If one exists, prompt: clean up prior team or abort.
+3. **Write disclosure** — surface pending writes to the user: `.gitignore` entry (if missing), workspace directory at `.tech-debt-audit-workspace/`, and the durable report at `docs/audits/YYYY-MM-DD-<target-slug>-debt.md`. Proceed unless the user objects.
+
 #### Spawn Contract
 
-1. Verify `.tech-debt-audit-workspace/` is in `.gitignore`. If absent, add it.
+1. Add `.tech-debt-audit-workspace/` to `.gitignore` if not already listed.
 2. Write framing context to `.tech-debt-audit-workspace/framing/frame.md` (scope, archetype, stakes, emphasis map, evidence map, input pointers).
 3. Create team via `TeamCreate` with `team_name: "tech-debt-audit"`. Fetch via `ToolSearch` if deferred.
-4. Create one task per auditor via `TaskCreate`. No `blockedBy` dependencies — all run in parallel.
+4. Create one task per auditor via `TaskCreate`. No `blockedBy` dependencies — all run in parallel. Record each task ID so it can be passed to the matching auditor in step 5.
 5. Spawn each auditor via `Agent` with `team_name`, `name` (role ID), `model: "sonnet"`, and `prompt` containing:
    - Role ID and owned categories
    - Emphasis level for their categories (from emphasis map)
@@ -140,6 +148,7 @@ Apply the staffing rules from [`references/staffing-rules.md`](references/staffi
    - Per-run tension playbook entries (generated in Phase 2)
    - Output file path: `.tech-debt-audit-workspace/findings/{role-id}.md`
    - Finding schema (inline in spawn prompt — too critical to rely on file reference for Sonnet)
+   - Task ID assigned in step 4, with instruction to `TaskUpdate` to `in_progress` on start and `completed` when the findings file is written. This makes `TaskGet` a meaningful secondary completion signal.
 6. Do NOT start the lead's own analysis before all teammates are spawned.
 
 #### Completion Contract
@@ -163,9 +172,11 @@ Messages are informal coordination signals — each auditor's structured finding
 
 Follow the cleanup resilience protocol from [`references/agent-teams.md`](references/agent-teams.md). Teammates must NOT self-cleanup. Only the lead manages shutdown and TeamDelete.
 
+**Workspace-preservation invariant.** The durable report (see Phase 5) must exist on disk before any workspace deletion. If the durable report is missing — for any reason — preserve `.tech-debt-audit-workspace/` regardless of user preference and surface the preservation to the user. This invariant overrides cleanup defaults; the only way the workspace gets deleted is durable report confirmed AND user opts to delete.
+
 1. **Shutdown loop** — for each auditor, send up to 3 shutdown requests with escalating context. Classify as orphaned if no idle after attempt 3 + 30s.
 2. **TeamDelete** — call `TeamDelete`. If it fails (orphaned auditors still active), report degraded state to user.
-3. **Workspace** — prompt user about preserving `.tech-debt-audit-workspace/`. Workspace cleanup is independent of team cleanup — always attempt it regardless of TeamDelete outcome.
+3. **Workspace** — only after the durable report is confirmed: prompt user "delete `.tech-debt-audit-workspace/` or keep?" Default to keep. If TeamDelete reported degraded state (orphaned auditors), preserve the workspace regardless — it may be the only record of partial findings.
 
 ### Phase 4: Synthesize
 
@@ -263,9 +274,11 @@ Tech debt audits naturally yield more findings than design reviews — these cap
 
 #### Durable Record
 
-If the user asks to save or `docs/audits/` exists, also write the backlog to `docs/audits/YYYY-MM-DD-<target-slug>-debt.md`.
+Write the backlog to a durable location BEFORE Phase 3 cleanup runs. Default path: `docs/audits/YYYY-MM-DD-<target-slug>-debt.md` (create `docs/audits/` if absent). If the user prefers a different location, ask before falling back to the default. The durable record is the user-facing deliverable; the workspace copy at `.tech-debt-audit-workspace/synthesis/report.md` is scratch and may be deleted during cleanup.
 
-After delivery, execute Phase 3 cleanup (shutdown + TeamDelete). Prompt user about preserving `.tech-debt-audit-workspace/`.
+If the durable write fails, do NOT proceed to cleanup — surface the error and preserve the workspace until the user resolves it.
+
+After the durable record is confirmed on disk, execute Phase 3 cleanup (shutdown + TeamDelete + workspace handling per the workspace-preservation invariant).
 
 ## Finding Schema
 
@@ -321,8 +334,10 @@ Severity is not the same as priority. Final ordering is severity × leverage × 
 | Missing findings file | Phase 3 completion check | Log in `auditors_failed`, proceed to synthesis |
 | Auditor timeout (5 min) | No idle notification activity | Treat as failed, proceed with available findings |
 | 4+ categories insufficient evidence | Phase 4 synthesis | Label `reduced-depth`, cap findings |
-| TeamDelete fails | Phase 3 cleanup | Orphaned auditors still active — report degraded state, proceed with workspace cleanup |
-| Stale workspace | Phase 3 start | Warn, offer: archive / remove / abort |
+| TeamDelete fails | Phase 3 cleanup | Orphaned auditors still active — report degraded state; preserve workspace (workspace-preservation invariant) |
+| Stale workspace | Phase 3 preflight | Offer: archive / remove / abort. Do not silently overwrite. |
+| Existing `tech-debt-audit` team in session | Phase 3 preflight | Prompt: clean up prior team or abort (one-team-per-session constraint) |
+| Durable report write fails | Phase 5 deliver | Preserve workspace, surface error to user, do NOT proceed to cleanup |
 | Severity inflation (>50% P0) | Phase 4 scoring sanity check | Recalibrate against severity definitions; demote findings without concrete "bleeding today" evidence |
 
 ## Anti-Patterns

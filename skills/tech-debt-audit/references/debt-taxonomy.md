@@ -171,6 +171,6 @@ For each archetype, lenses are tagged primary (◆) or secondary (○). Unlisted
 
 **Cleanup-sprint planning:** Score each lens for the current codebase (clean / drifting / strained / broken). Drifting and strained are where the highest-ROI sprint items live — broken is usually a strategic item, clean doesn't need attention.
 
-**Handoff readiness:** The Knowledge category disproportionately matters when a system is changing hands. A bus-factor-1 + undocumented combination is a P0 even if everything else looks fine.
+**Handoff readiness:** The Knowledge category disproportionately matters when a system is changing hands. A bus-factor-1 + undocumented combination is a P0 *only* when there is concrete handoff evidence — announced transition, named successor onboarding, deadline within ~1 quarter, or an active blocker traced to the gap. Without such evidence it is P1 (compounding) or P2 (latent), not P0. This keeps "actively bleeding today" the consistent bar for P0 across the audit.
 
 **Pre-scaling readiness:** Operational and Performance lenses dominate. Code Health and Knowledge can wait; a scaling cliff hits whether the code is pretty or not.

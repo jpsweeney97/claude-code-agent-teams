@@ -130,7 +130,7 @@ Team resources may remain at ~/.claude/teams/{team-name}/.
 These will be cleaned up when a new team is created, or remove manually.
 ```
 
-Then proceed with workspace cleanup (delete workspace directory). Workspace cleanup is independent of team cleanup — always attempt it regardless of TeamDelete outcome.
+Then handle workspace cleanup per the skill's policy. The skill — not this protocol — decides whether and when the workspace directory is deleted. Skills that require a durable artifact before deletion (e.g., `tech-debt-audit`) must preserve the workspace until that artifact exists.
 
 #### Cleanup Sequence Summary
 
@@ -146,7 +146,8 @@ call TeamDelete
   if success: done
   if fail: report degraded state to user
 
-clean up workspace directory (always)
+handle workspace per skill policy
+  (e.g., tech-debt-audit preserves workspace until durable report is confirmed)
 ```
 
 ## Hard Constraints
