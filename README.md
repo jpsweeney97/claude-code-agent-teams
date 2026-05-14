@@ -1,6 +1,6 @@
 # claude-code-agent-teams
 
-Agent-team-powered [Claude Code](https://code.claude.com) skills for grounded documentation and deep architecture review. Each skill orchestrates a parallel team of subagents that explore a codebase or design from multiple perspectives, then synthesizes findings into a single grounded artifact.
+Agent-team-powered [Claude Code](https://code.claude.com) skills for grounded documentation, deep architecture review, and tech-debt audit. Each skill orchestrates a parallel team of subagents that explore a codebase, design, or debt surface from multiple perspectives, then synthesizes findings into a single grounded artifact.
 
 This is the experimental-flag tier — every skill in this plugin requires Claude Code v2.1.32+ and `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`. For solo (non-team) skills that work without the experimental flag, see the companion plugin [`claude-code-skills`](https://github.com/jpsweeney97/claude-code-skills).
 

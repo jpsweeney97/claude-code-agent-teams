@@ -130,7 +130,7 @@ Apply the staffing rules from [`references/staffing-rules.md`](references/staffi
 Before any spawn or write:
 
 1. **Workspace check** — if `.tech-debt-audit-workspace/` already exists, present options: archive (rename with timestamp suffix), remove, or abort. Do not silently overwrite.
-2. **Team check** — verify no existing team named `tech-debt-audit` is active in this session (one-team-per-session constraint). If one exists, prompt: clean up prior team or abort.
+2. **Team check** — no team-listing tool is available in this skill's `allowed-tools`. Executable check: if `~/.claude/teams/tech-debt-audit/` exists on disk, its activity is unprovable from outside the session — prompt the user to clean up via `TeamDelete` or abort. If the directory is absent, proceed; `TeamCreate` will hard-fail if the runtime still considers the team active.
 3. **Write disclosure** — surface pending writes to the user: `.gitignore` entry (if missing), workspace directory at `.tech-debt-audit-workspace/`, and the durable report at `docs/audits/YYYY-MM-DD-<target-slug>-debt.md`. Proceed unless the user objects.
 
 #### Spawn Contract

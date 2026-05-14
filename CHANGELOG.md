@@ -12,9 +12,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
-- `tech-debt-audit` lifecycle hardening: explicit Phase 3 preflight for stale workspace and existing-team detection; mandatory durable report at `docs/audits/YYYY-MM-DD-<target-slug>-debt.md` before any workspace deletion; workspace-preservation invariant overrides cleanup defaults when the durable report is missing or `TeamDelete` reports degraded state; task IDs and `TaskUpdate` obligations now wired into auditor spawn prompts so `TaskGet` is a meaningful completion signal.
+- `tech-debt-audit` lifecycle hardening: explicit Phase 3 preflight for stale workspace and existing-team detection (executable: filesystem inspection of `~/.claude/teams/tech-debt-audit/` plus `TeamCreate`-conflict fallback, since `allowed-tools` has no team-listing tool); mandatory durable report at `docs/audits/YYYY-MM-DD-<target-slug>-debt.md` before any workspace deletion; workspace-preservation invariant overrides cleanup defaults when the durable report is missing or `TeamDelete` reports degraded state; task IDs and `TaskUpdate` obligations now wired into auditor spawn prompts (status normalized to snake_case `in_progress` with full payload spec in `references/agent-teams.md`) so `TaskGet` is a meaningful completion signal.
 - `tech-debt-audit` severity rubric tightened: P0 for `bus-factor-1 + undocumented` now requires concrete handoff evidence (announced transition, named successor, near-term deadline, or active blocker) rather than the prior "even if everything else looks fine" wording.
-- README and plugin-facing docs now list 6 skills (was 5).
+- README now lists 6 skills (was 5); README lead, `plugin.json`, and `marketplace.json` descriptions updated to include tech-debt audit scope, with a `tech-debt` keyword added to `plugin.json`.
 
 ## [0.1.0] - 2026-05-08
 

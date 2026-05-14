@@ -28,11 +28,11 @@ If deferred: fetch via `ToolSearch` before use.
 
 ### 2. TaskCreate
 
-Creates tasks in the shared task list. States: `pending` → `in progress` → `completed`.
+Creates tasks in the shared task list. States: `pending` → `in_progress` → `completed` (snake_case is the canonical API spelling — match it exactly in `TaskUpdate` payloads).
 
 Tasks can declare dependencies via `blockedBy`. Blocked tasks cannot be claimed until dependencies complete. For exploration teams, all tasks run in parallel — do NOT set dependencies.
 
-Other task tools: `TaskGet` (read one), `TaskList` (list all), `TaskUpdate` (update status/details).
+Other task tools: `TaskGet` (read one), `TaskList` (list all), `TaskUpdate` (update one — payload: `{task_id, status}`; `status` must be `pending`, `in_progress`, or `completed`).
 
 ### 3. Agent (with team_name)
 

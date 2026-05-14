@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "claude-code-agent-teams",
-  "description": "Agent-team-powered skills for grounded documentation and deep architecture review. Requires CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1.",
+  "description": "Agent-team-powered skills for grounded documentation, deep architecture review, and tech-debt audit. Requires CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1.",
   "author": {
     "name": "JP Sweeney",
     "url": "https://github.com/jpsweeney97"
@@ -9,5 +9,5 @@
   "homepage": "https://github.com/jpsweeney97/claude-code-agent-teams",
   "repository": "https://github.com/jpsweeney97/claude-code-agent-teams",
   "license": "MIT",
-  "keywords": ["claude-code", "skills", "agent-teams", "documentation", "architecture-review"]
+  "keywords": ["claude-code", "skills", "agent-teams", "documentation", "architecture-review", "tech-debt"]
 }
