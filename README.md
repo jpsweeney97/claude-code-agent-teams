@@ -1,6 +1,6 @@
 # claude-code-agent-teams
 
-Agent-team-powered [Claude Code](https://code.claude.com) skills for grounded documentation and deep architecture review. Each skill orchestrates a parallel team of subagents that explore a codebase or design from multiple perspectives, then synthesizes findings into a single grounded artifact.
+Agent-team-powered [Claude Code](https://code.claude.com) skills for grounded documentation, deep architecture review, and tech-debt audit. Each skill orchestrates a parallel team of subagents that explore a codebase, design, or debt surface from multiple perspectives, then synthesizes findings into a single grounded artifact.
 
 This is the experimental-flag tier — every skill in this plugin requires Claude Code v2.1.32+ and `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`. For solo (non-team) skills that work without the experimental flag, see the companion plugin [`claude-code-skills`](https://github.com/jpsweeney97/claude-code-skills).
 
@@ -19,13 +19,13 @@ This guarantees that names from this plugin can never collide with skills from o
 ## Requirements
 
 - **Claude Code v2.1.32 or higher.** Check with `claude --version`. The agent-teams primitive used by every skill in this plugin landed in this version. See the [agent teams documentation](https://code.claude.com/docs/en/agent-teams) for background.
-- **`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`** in your `settings.json` `env` block (or as a shell environment variable). Required for all 5 skills — they hard-stop without the flag.
+- **`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`** in your `settings.json` `env` block (or as a shell environment variable). Required for all 6 skills — they hard-stop without the flag.
 
   > **Note:** The agent-teams feature is experimental. If Anthropic renames the flag or stabilizes the feature in a future release, expect a follow-up release of this plugin. Bug reports against rename/deprecation are welcome.
 
 ## What's in here
 
-5 skills, all agent-team-powered:
+6 skills, all agent-team-powered:
 
 | Skill | Purpose |
 |---|---|
@@ -34,6 +34,7 @@ This guarantees that names from this plugin can never collide with skills from o
 | [`explore-repo`](skills/explore-repo/SKILL.md) | Deeply explore any GitHub repo or local codebase using a 6-teammate exploration team (Cartographer, Architect, Interface Mapper, Toolchain Scout, Domain Analyst, Historian). |
 | [`handbook`](skills/handbook/SKILL.md) | Create, audit, and update operational handbooks with a 5-perspective parallel exploration team. |
 | [`readme`](skills/readme/SKILL.md) | Create, audit, and improve READMEs grounded in actual project state via a parallel exploration team. |
+| [`tech-debt-audit`](skills/tech-debt-audit/SKILL.md) | Thorough tech debt audit using 6 specialized auditors (Code Health, Architecture Drift, Dependency & Supply Chain, Test Debt, Operational & Observability, Knowledge & Documentation), synthesized into a prioritized cleanup backlog with severity × leverage × effort scoring. |
 
 Each skill's `SKILL.md` is the canonical specification — frontmatter declares when Claude should trigger it, and the body is the procedure Claude follows.
 
